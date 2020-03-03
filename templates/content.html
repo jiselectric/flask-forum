@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 id="title"></h1>
+    <div id="content"></div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $.ajax({
+            url : '/getContent',
+            method : 'GET',
+            data : {author : '{{aid}}'}
+
+        }).done(function(result){
+            $("#title").html(result["title"]);
+            $("#content").html(result["content"]);
+
+
+        });
+
+    </script>
+</body>
+</html>

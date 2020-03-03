@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title> Articles </title>
+</head>
+<body>
+    <div id="container">
+        <div id="login-field">
+            <input type="text" placeholder="ID" name="id" id="id">
+            <input type="password" placeholder="password" name="pw" id="pw">
+            <input type="button" value="Login" name="login-btn" id="login-btn">
+            <a href="register"><input type="button" value="Register" name="register-btn" id="register-btn"></a>
+        </div>
+
+        <div id="login-success">
+            <p id="login-message" style="display:inline-block"> Welcome, </p>
+            <input type="button" value="logout" name="logout-btn" id="logout-btn">
+        </div>
+
+        <div class="article-list">
+
+        </div>
+    </div>
+
+</body>
+<script>
+    $('#login-success').hide()
+    $('#login-btn').on('click', function(e){
+            let id = $('#id').val();
+            let pw = $('#pw').val();
+
+            if(id!= '' && pw != ''){
+                $.ajax({
+                    url : '/login_check',
+                    method : 'post',
+                    data : {
+                        'id' : id,
+                        'pw' : pw
+                    }
+                }).done(function(result){
+                     if(result == 'success'){
+                        $('#login-field').hide();
+                        $('#login-success').show();
+                        $('#login-message').html(id);
+                        alert(result);
+                     }
+                     else{
+                        alert(result);
+                     }
+                });
+            }
+        });
+
+        $("#logout-btn").on("click", function(e){
+        let id = $("#id").val();
+
+            $.ajax({
+                url : "/logout",
+                method : "get",
+                data : {
+                    "login_id" : id,
+                }
+            }).done(function(result){
+                if(result == 'success') {
+                    location.href = '/articles';
+                }
+            });
+        });
+
+        $.ajax({
+            url : '/getArticleTitles',
+            method : 'GET'
+        }).done(function(result){
+            console.log(result[1]['article_id']);
+            var html = "";
+            for(let i=0;i<result.length;i++){
+                html += "<a href='/content?author="+result[i]['author']+"'>";
+                html += "<div>";
+                html += "    <span>" + result[i]['article_id'] + ".</span>";
+                html += "    <span>" + result[i]['title'] + "</span>";
+                html += "</div>";
+                html += "</a>";
+            }
+            $(".article-list").html(html);
+
+        });
+
+</script>
+</html>
