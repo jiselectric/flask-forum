@@ -12,7 +12,7 @@
         $.ajax({
             url : '/getContent',
             method : 'GET',
-            data : {author : '{{aid}}'}
+            data : {article_id : '{{aid}}'}
 
         }).done(function(result){
             $("#title").html(result["title"]);

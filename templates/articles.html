@@ -7,18 +7,22 @@
 </head>
 <body>
     <div id="container">
+
+
+        {% if "username" not in session %}
         <div id="login-field">
+            <form method="POST" action="/login_check">
             <input type="text" placeholder="ID" name="id" id="id">
             <input type="password" placeholder="password" name="pw" id="pw">
-            <input type="button" value="Login" name="login-btn" id="login-btn">
+            <input type="submit" value="Login" name="login-btn" id="login-btn">
             <a href="register"><input type="button" value="Register" name="register-btn" id="register-btn"></a>
+            </form>
         </div>
-
+        {% endif %}
         <div id="login-success">
-            <p id="login-message" style="display:inline-block"> Welcome, </p>
+            <p id="login-message" style="display:inline-block"> {% if "username" in session %}  {{session["username"]}}  {% else %}Welcome, {% endif %}</p>
             <input type="button" value="logout" name="logout-btn" id="logout-btn">
         </div>
-
         <div class="article-list">
 
         </div>
@@ -26,32 +30,11 @@
 
 </body>
 <script>
-    $('#login-success').hide()
-    $('#login-btn').on('click', function(e){
-            let id = $('#id').val();
-            let pw = $('#pw').val();
 
-            if(id!= '' && pw != ''){
-                $.ajax({
-                    url : '/login_check',
-                    method : 'post',
-                    data : {
-                        'id' : id,
-                        'pw' : pw
-                    }
-                }).done(function(result){
-                     if(result == 'success'){
-                        $('#login-field').hide();
-                        $('#login-success').show();
-                        $('#login-message').html(id);
-                        alert(result);
-                     }
-                     else{
-                        alert(result);
-                     }
-                });
-            }
-        });
+
+     {% if "username" not in session %}
+    $('#login-success').hide()
+    {% endif %}
 
         $("#logout-btn").on("click", function(e){
         let id = $("#id").val();
@@ -76,7 +59,7 @@
             console.log(result[1]['article_id']);
             var html = "";
             for(let i=0;i<result.length;i++){
-                html += "<a href='/content?author="+result[i]['author']+"'>";
+                html += "<a href='/content?author="+result[i]['author']+"&article_id="+result[i]['article_id']+"'>";
                 html += "<div>";
                 html += "    <span>" + result[i]['article_id'] + ".</span>";
                 html += "    <span>" + result[i]['title'] + "</span>";
