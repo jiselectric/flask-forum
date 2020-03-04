@@ -7,6 +7,7 @@
 <body>
     <h1 id="title"></h1>
     <div id="content"></div>
+    <input type="button" value="Remove" id="remove-btn">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         $.ajax({
@@ -17,9 +18,21 @@
         }).done(function(result){
             $("#title").html(result["title"]);
             $("#content").html(result["content"]);
-
-
         });
+
+        $("#remove-btn").on("click", function(e){
+            console.log('hey');
+            $.ajax({
+                url : "/remove",
+                method : "GET",
+                data : {article_id : '{{aid}}'}
+            }).done(function(result){
+                if(result == 'success') {
+                    location.href = '/articles';
+                }
+            });
+        });
+
 
     </script>
 </body>

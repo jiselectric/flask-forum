@@ -4,7 +4,7 @@ import pickle as pk
 app = Flask(__name__)
 app.secret_key = "jiselectric"
 
-RESPONSE_SUCCES = "success"
+RESPONSE_SUCCESS = "success"
 RESPONSE_FAIL = "fail"
 
 try:
@@ -26,7 +26,12 @@ myArticles = [{"article_id": 1,
               {"article_id": 3,
                "title": "There Is A Light That Never Goes Out.",
                "content": "500 Days of Summer.",
-               "author": "jikim"}
+               "author": "jikim"},
+              {'article_id': 4,
+               'title': 'Hey Jude',
+               'content': "Don't Look Back In Anger",
+               'author': 'paul'
+              }
               ]
 
 
@@ -34,7 +39,7 @@ myArticles = [{"article_id": 1,
 @app.route('/session_check')
 def session_check():
     if "username" in session:
-        return RESPONSE_SUCCES
+        return RESPONSE_SUCCESS
     else:
         return RESPONSE_FAIL
 
@@ -80,8 +85,6 @@ def content():
         return "<script>alert('Login Needed.');location.href='/articles';</script>"
     else:
 
-        # session 은 발급되어있음
-        # TODO : 내가 선택한 게시글의 author가 session['username']과 일치하는지 확인
         for article in myArticles:
             if article['article_id'] == int(articleID):
                 if article['author'] == session['username']:
@@ -100,6 +103,15 @@ def getContent():
             return jsonify(article)
 
     return jsonify([])
+
+@app.route('/remove')
+def remove():
+    aid = request.args.get('article_id')
+
+    for article in myArticles:
+        if article['article_id'] == int(aid):
+            myArticles.pop(int(aid) - 1)
+            return 'success'
 
 
 @app.route('/register')
@@ -143,7 +155,7 @@ def getUsers():
 def logout():
     session.pop('username', None)
 
-    return 'success'
+    return RESPONSE_SUCCESS
 
 
 app.run()
