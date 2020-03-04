@@ -111,7 +111,11 @@ def remove():
     for article in myArticles:
         if article['article_id'] == int(aid):
             myArticles.pop(int(aid) - 1)
-            return 'success'
+            number = 0
+            for article in myArticles:
+                number = number + 1
+                article['article_id'] = number
+            return RESPONSE_SUCCESS
 
 
 @app.route('/register')
